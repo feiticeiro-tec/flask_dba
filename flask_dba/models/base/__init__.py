@@ -4,7 +4,24 @@ from datetime import datetime
 from ..utils import uuid_default
 
 
-class ModelBase():
+class ModelMetodosBase():
+    """Model base para todos os modelos."""
+
+    def add(self, db):
+        """Adiciona o obj ao banco de dados."""
+        db.session.add(self)
+        self.flush(db)
+
+    def save(self, db):
+        """Faz Commit no banco de dados."""
+        db.session.commit()
+
+    def flush(self, db):
+        """Atualiza as informações do banco de dados."""
+        db.session.flush()
+
+
+class ModelBase(ModelMetodosBase):
     """Model base para todos os modelos."""
     uuid = Column(
         String(36),

@@ -52,12 +52,12 @@ class FlaskDBA():
             if with_usuario:
                 ref_permissao = relacao_usuario('PermissaoUsuario')
                 ref_grupo = relacao_usuario('GrupoUsuario')
-            else:
-                ref_permissao = object
-                ref_grupo = object
+                self.init_table('PermissaoUsuario', ref_permissao)
+                self.init_table('GrupoUsuario', ref_grupo)
 
-            self.init_table('PermissaoUsuario', ref_permissao)
-            self.init_table('GrupoUsuario', ref_grupo)
+    def load_rules(self):
+        """Gera as permissões de acordo com as rotas do app."""
+        self.Permissao.gerar_permissao(self.Permissao, self.app, self.db)
 
     def init_agendamento(self):
         """Initialize agendamento."""
@@ -82,10 +82,12 @@ class FlaskDBA():
 
     def init_table(self, name, *extras):
         logger.debug(f"Inicializando a tabela {name}")
-        return type(
+        new = type(
             name,
             (*extras, getattr(self, name), self.db.Model), {}
         )
+        setattr(self, name, new)
+        return new
 
     def init_empresa(
         self,
