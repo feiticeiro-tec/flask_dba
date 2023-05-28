@@ -47,3 +47,29 @@ class Permissao(ModelBase):
         """Atualiza as informações da permissão."""
         self.excludo = excludo
         self.rule = rule
+
+    @staticmethod
+    def permissoes_sem_grupo_correspondente(db) -> object:
+        """
+        SELECT DISTINCT endpoint
+        FROM Permissao P
+            LEFT JOIN Grupo G ON
+                P.endpoint == G.nome
+                AND G.custom == 0
+        WHERE
+            G.uuid IS NULL
+            AND P.custom == 0
+            AND P.excludo == 0
+        """
+        query = db.text("""
+        SELECT DISTINCT endpoint
+        FROM Permissao P
+            LEFT JOIN Grupo G ON
+                P.endpoint == G.nome
+                AND G.custom == 0
+        WHERE
+            G.uuid IS NULL
+            AND P.custom == 0
+            AND P.excludo == 0
+        """)
+        return db.session.execute(query).fetchall()

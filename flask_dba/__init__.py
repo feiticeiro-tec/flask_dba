@@ -58,6 +58,14 @@ class FlaskDBA():
     def load_rules(self):
         """Gera as permissões de acordo com as rotas do app."""
         self.Permissao.gerar_permissao(self.Permissao, self.app, self.db)
+        self.Grupo.gerar_grupos(self.Grupo, self.Permissao, self.db)
+
+        self.PermissaoGrupo.gerar_relacoes(
+            self.PermissaoGrupo,
+            self.Permissao,
+            self.Grupo,
+            self.db
+        )
 
     def init_agendamento(self):
         """Initialize agendamento."""

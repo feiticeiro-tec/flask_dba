@@ -12,7 +12,7 @@ dba = FlaskDBA()
 dba.init_app(app, db)
 dba.init_usuario()
 dba.init_permissions(
-    with_usuario=False
+    with_usuario=True
 )
 # dba.init_agendamento()
 # dba.init_endereco(
