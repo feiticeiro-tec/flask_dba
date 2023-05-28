@@ -10,3 +10,4 @@ class Permissao(ModelBase):
     method = Column(String(255), nullable=False)
     descricao = Column(String(255), nullable=False)
     publico = Column(Boolean, default=False, nullable=False)
+    custom = Column(Boolean, default=False, nullable=False)
