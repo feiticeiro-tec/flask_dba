@@ -60,12 +60,7 @@ class FlaskDBA():
         self.Permissao.gerar_permissao(self.Permissao, self.app, self.db)
         self.Grupo.gerar_grupos(self.Grupo, self.Permissao, self.db)
 
-        self.PermissaoGrupo.gerar_relacoes(
-            self.PermissaoGrupo,
-            self.Permissao,
-            self.Grupo,
-            self.db
-        )
+        self.PermissaoGrupo.gerar_relacoes(self.PermissaoGrupo, self.db)
 
     def init_agendamento(self):
         """Initialize agendamento."""

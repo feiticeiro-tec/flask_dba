@@ -20,43 +20,30 @@ class PermissaoGrupo(ModelBase):
     ))
 
     @staticmethod
-    def permissoes_com_grupo_sem_match(cls, permissao, grupo, db):
-        """Retorna as permissões que não possuem
+    def permissoes_com_grupo_sem_match(db):
+        """Retorna as permissões (P.uuid, G.uuid) que não possuem
         relacao com grupo correspondente.
-
-        SELECT P.uuid, G.uuid
-        FROM Permissao P
+        """
+        query = db.text("""
+            SELECT P.uuid, G.uuid
+            FROM Permissao P
+            JOIN Grupo G ON
+                P.endpoint == G.nome
+                AND G.custom == 0
             LEFT JOIN PermissaoGrupo PG ON
                 P.uuid == PG.permissao_uuid
-            LEFT JOIN Grupo G ON
-                PG.grupo_uuid == G.uuid
-                AND G.custom == 0
-        WHERE
-            P.endpoint == G.nome
-            AND P.custom == 0
-            AND P.excludo == 0
-            AND PG.uuid IS NULL
-
-        """
-        return db.session.query(permissao.uuid, grupo.uuid).join(
-            cls, (
-                permissao.uuid == cls.permissao_uuid
-                and grupo.uuid == cls.grupo_uuid
-            ), isouter=True
-        ).filter(
-            permissao.endpoint == grupo.nome,
-            permissao.custom == 0,
-            grupo.custom == 0,
-            permissao.excludo == 0,
-            grupo.excludo == 0,
-            cls.uuid.is_(None),
-        ).all()
+                AND G.uuid == PG.grupo_uuid
+            WHERE
+                P.custom == 0
+                AND P.excludo == 0
+                AND PG.uuid IS NULL
+            """)
+        return db.session.execute(query).fetchall()
 
     @staticmethod
-    def gerar_relacoes(cls, permissao, grupo, db):
+    def gerar_relacoes(cls, db):
         """Gera as relações entre permissão e grupo."""
-        for match in cls.permissoes_com_grupo_sem_match(
-                cls, permissao, grupo, db):
+        for match in cls.permissoes_com_grupo_sem_match(db):
             permissao_grupo = cls(
                 permissao_uuid=match[0],
                 grupo_uuid=match[1],
