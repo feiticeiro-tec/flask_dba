@@ -33,3 +33,13 @@ def inst_agendamento():
 def inst_s():
     """Retorna a instancia do app, db e dba."""
     return instancia()
+
+
+@fixture(scope='session')
+def session_usuario():
+    """Retorna a instancia do app, db e dba."""
+    dba = instancia()
+    with dba.app.app_context():
+        dba.init_usuario()
+        dba.db.create_all()
+    return dba

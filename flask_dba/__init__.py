@@ -55,13 +55,13 @@ class FlaskDBA():
             self.init_rules()
         app.cli.add_command(init_rules, name='init_rules')
 
-    def init_permissions(self, with_usuario=False):
+    def init_permissions(self, usuario=False):
         """Initialize permissions."""
         with self.app.app_context():
             self.init_table('Permissao')
             self.init_table('Grupo')
             self.init_table('PermissaoGrupo')
-            if with_usuario:
+            if usuario:
                 ref_permissao = relacao_usuario('PermissaoUsuario')
                 ref_grupo = relacao_usuario('GrupoUsuario')
                 self.init_table('PermissaoUsuario', ref_permissao)
@@ -82,11 +82,11 @@ class FlaskDBA():
             self.init_table("ExecucaoItem")
             self.init_table("Execucao")
 
-    def init_endereco(self, with_usuario=False):
+    def init_endereco(self, usuario=False):
         with self.app.app_context():
             self.init_table("Endereco")
             self.init_table("Estado")
-            if with_usuario:
+            if usuario:
                 ref_usuario = relacao_usuario('UsuarioEndereco')
                 self.init_table("UsuarioEndereco", ref_usuario)
 

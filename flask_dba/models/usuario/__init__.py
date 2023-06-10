@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Boolean
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..base import ModelBase
 
@@ -12,3 +13,22 @@ class Usuario(ModelBase):
     password = Column(String(255), nullable=False)
 
     admin = Column(Boolean, default=False, nullable=False)
+
+    def insert_credencial(self, username, password, **_):
+        """Insere credencial."""
+        self.username = username
+        self.insert_password(password)
+        return self
+
+    def insert_password(self, password, **_):
+        """Insere senha."""
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password, **_):
+        """Verifica senha."""""
+        return check_password_hash(self.password, password)
+
+    def insert_contato(self, email, **_):
+        """Insere email."""
+        self.email = email
+        return self

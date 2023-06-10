@@ -78,3 +78,17 @@ class Permissao(ModelBase):
             AND P.excludo == 0
         """)
         return db.session.execute(query).fetchall()
+
+    def add_to_user(
+        self,
+        usuario_uuid: str
+    ):
+        PUser = self._instancia['dba'].PermissaoUsuario
+        p_user = PUser()
+        p_user.insert_permissao(
+            permissao_uuid=self.uuid,
+            usuario_uuid=usuario_uuid,
+        )
+        p_user.add()
+
+        return p_user

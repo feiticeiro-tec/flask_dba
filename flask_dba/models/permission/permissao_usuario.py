@@ -15,3 +15,9 @@ class PermissaoUsuario(ModelBase):
     permissao = declared_attr(lambda cls: relationship(
         'Permissao', backref='PermissaoUsuario',
     ))
+
+    def insert_permissao(self, permissao_uuid, usuario_uuid, **_):
+        """Insere permissão."""
+        self.permissao_uuid = permissao_uuid
+        self.usuario_uuid = usuario_uuid
+        return self
