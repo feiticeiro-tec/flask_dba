@@ -17,6 +17,12 @@ db = SQLAlchemy(app)
 dba = FlaskDBA(app, db)
 dba.init_usuario()
 dba.init_permissions(
-    with_usuario=True
+    usuario=True
 )
+```
+> Iniciando a permissoes junto as rotas do servidor
+permisssoes usa a env FLASK_DBA_NAME para definir o app na permissao por padrão é "principal".
+
+```bash
+flask init_rules
 ```
