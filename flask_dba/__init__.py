@@ -1,12 +1,14 @@
 """Main module."""
-from .models.utils import relacao_usuario
-from loguru import logger
 import click
+from loguru import logger
+from .models.utils import relacao_usuario
 
 
 class FlaskDBA():
     """Main class."""
+    # pylint: disable=C0415
     from .models.base import ModelBase
+    # pylint: disable=C0415
     from .models.permission import (
         Permissao,
         Grupo,
@@ -14,6 +16,7 @@ class FlaskDBA():
         PermissaoUsuario,
         GrupoUsuario,
     )
+    # pylint: disable=C0415
     from .models.agendamento import (
         Agendamento,
         Coleta,
@@ -21,13 +24,16 @@ class FlaskDBA():
         ExecucaoItem,
         Execucao,
     )
+    # pylint: disable=C0415
     from .models.endereco import (
         Endereco,
         Estado,
         UsuarioEndereco
     )
+    # pylint: disable=C0415
     from .models.usuario import Usuario
 
+    # pylint: disable=C0415
     from .models.empresa import (
         Empresa,
         EmpresaEndereco,
@@ -36,19 +42,23 @@ class FlaskDBA():
         GrupoColaborador,
     )
 
-    def __init__(self, app=None, db=None):
+    def __init__(self, app=None, db=None):  # pylint: disable=C0103
         if app is not None and db is not None:
             self.init_app(app, db)
 
-    def init_app(self, app, db):
+    def init_app(self, app, db):  # pylint: disable=C0103
         """Initialize the FlaskDBA extension."""
         logger.debug("Inicializando a extensão FlaskDBA")
         self.app = app
-        self.db = db
+        self.db = db  # pylint: disable=C0103
 
-        self.ModelBase._instancia['app'] = app
-        self.ModelBase._instancia['db'] = db
-        self.ModelBase._instancia['dba'] = self
+        # pylint: disable=protected-access
+        if hasattr(self.ModelBase, '_instancia'):
+            if isinstance(self.ModelBase._instancia, dict):
+                # pylint: disable=protected-access
+                self.ModelBase._instancia['app'] = app
+                self.ModelBase._instancia['db'] = db
+                self.ModelBase._instancia['dba'] = self
 
         @click.command()
         def init_rules():
@@ -119,6 +129,7 @@ class FlaskDBA():
         with_colaborador=False,
         with_permissions=False
     ):
+        """Initialize empresa."""
         logger.debug("Inicializando a empresa")
         with self.app.app_context():
             self.init_table("Empresa")

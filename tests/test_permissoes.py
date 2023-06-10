@@ -1,3 +1,4 @@
+"""Testes para as permissões."""
 import pytest
 from sqlalchemy.exc import OperationalError
 
@@ -11,7 +12,7 @@ def test_init_permissions(inst_f):
         with pytest.raises(OperationalError):
             inst_f.Permissao.query.all()
         inst_f.db.create_all()
-        inst_f.Permissao.query.all() == []
+        assert inst_f.Permissao.query.all() == []
 
 
 def test_init_rules(inst_f):

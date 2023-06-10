@@ -1,8 +1,11 @@
+"""Testes para o módulo de usuário."""
+
 
 def test_create_usuario(session_usuario):
-    User = session_usuario.Usuario
+    """Testa a criação de um usuário."""
+    _user = session_usuario.Usuario
     with session_usuario.app.app_context():
-        user = User()
+        user = _user()
         user.insert_credencial(
             username='teste',
             password='123456',
@@ -14,7 +17,7 @@ def test_create_usuario(session_usuario):
         user.save()
 
     with session_usuario.app.app_context():
-        user = User.query.first()
+        user = _user.query.first()
         assert user.email == 'email@dominio.com'
         assert user.username == 'teste'
         assert user.check_password('123456')
@@ -22,6 +25,7 @@ def test_create_usuario(session_usuario):
 
 
 def test_bind_permissions_with_user(session_usuario):
+    """Testa a associação de permissões com o usuário."""
     dba = session_usuario
     with dba.app.app_context():
         dba.init_permissions(
@@ -36,8 +40,9 @@ def test_bind_permissions_with_user(session_usuario):
 
 
 def test_add_permissao_to_user(session_usuario):
+    """Testa a adição de permissão ao usuário."""
     dba = session_usuario
-    PUser = dba.PermissaoUsuario
+    _puser = dba.PermissaoUsuario
     user_uuid = None
     permissao_uuid = None
     with dba.app.app_context():
@@ -51,7 +56,7 @@ def test_add_permissao_to_user(session_usuario):
         permissao.save()
 
     with dba.app.app_context():
-        assert PUser.query.filter(
-            PUser.usuario_uuid == user_uuid,
-            PUser.permissao_uuid == permissao_uuid
+        assert _puser.query.filter(
+            _puser.usuario_uuid == user_uuid,
+            _puser.permissao_uuid == permissao_uuid
         ).first() is not None
