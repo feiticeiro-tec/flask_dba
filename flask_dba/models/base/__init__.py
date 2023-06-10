@@ -15,15 +15,17 @@ class ModelMetodosBase():
     def add(self):
         """Adiciona o obj ao banco de dados."""
         self._instancia['db'].session.add(self)
-        self.flush()
+        return self.flush()
 
     def save(self):
         """Faz Commit no banco de dados."""
         self._instancia['db'].session.commit()
+        return self
 
     def flush(self):
         """Atualiza as informações do banco de dados."""
         self._instancia['db'].session.flush()
+        return self
 
 
 class ModelBase(ModelMetodosBase):

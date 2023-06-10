@@ -1,4 +1,5 @@
 """Modelo de dados para coleta de dados."""
+from loguru import logger
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
@@ -18,3 +19,7 @@ class Coleta(ModelBase):
         lambda cls: relationship(
             'ExecucaoItem', backref='Coleta',
         ))
+
+    def insert(self, **kwargs):
+        logger.debug(f'Coleta.insert({kwargs})')
+        return self
