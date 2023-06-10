@@ -10,11 +10,11 @@ db = SQLAlchemy(app)
 
 dba = FlaskDBA()
 dba.init_app(app, db)
-dba.init_usuario()
+# dba.init_usuario()
 dba.init_permissions(
-    with_usuario=True
+    # with_usuario=True
 )
-# dba.init_agendamento()
+dba.init_agendamento()
 # dba.init_endereco(
 #     with_usuario=True
 # )
@@ -25,5 +25,4 @@ dba.init_permissions(
 # )
 with app.app_context():
     db.create_all()
-    dba.load_rules()
     print(dba.Permissao.query.all())

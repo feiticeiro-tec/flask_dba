@@ -48,5 +48,5 @@ class PermissaoGrupo(ModelBase):
                 permissao_uuid=match[0],
                 grupo_uuid=match[1],
             )
-            permissao_grupo.add(db)
+            permissao_grupo.add()
         db.session.commit()

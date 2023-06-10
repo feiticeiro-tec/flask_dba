@@ -1,10 +1,12 @@
 """Main module."""
 from .models.utils import relacao_usuario
 from loguru import logger
+import click
 
 
 class FlaskDBA():
     """Main class."""
+    from .models.base import ModelBase
     from .models.permission import (
         Permissao,
         Grupo,
@@ -43,6 +45,16 @@ class FlaskDBA():
         self.app = app
         self.db = db
 
+        self.ModelBase._instancia['app'] = app
+        self.ModelBase._instancia['db'] = db
+        self.ModelBase._instancia['dba'] = self
+
+        @click.command()
+        def init_rules():
+            """Initialize permissions."""
+            self.init_rules()
+        app.cli.add_command(init_rules, name='init_rules')
+
     def init_permissions(self, with_usuario=False):
         """Initialize permissions."""
         with self.app.app_context():
@@ -55,7 +67,7 @@ class FlaskDBA():
                 self.init_table('PermissaoUsuario', ref_permissao)
                 self.init_table('GrupoUsuario', ref_grupo)
 
-    def load_rules(self):
+    def init_rules(self):
         """Gera as permissões de acordo com as rotas do app."""
         self.Permissao.gerar_permissao(self.Permissao, self.app, self.db)
         self.Grupo.gerar_grupos(self.Grupo, self.Permissao, self.db)

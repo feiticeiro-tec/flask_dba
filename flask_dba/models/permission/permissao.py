@@ -1,4 +1,5 @@
 """Modelo de permissao de rota."""
+import os
 from loguru import logger
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -15,12 +16,15 @@ class Permissao(ModelBase):
     descricao = Column(String(255))
     publico = Column(Boolean, default=False, nullable=False)
     custom = Column(Boolean, default=False, nullable=False)
+    app = Column(String(255), nullable=False)
 
     @staticmethod
     def gerar_permissao(cls, app: Flask, db: SQLAlchemy):
         logger.debug('Criando permissões')
+        app_name = os.environ.get('FLASK_DBA_NAME', 'principal')
         cls.query.filter(
-            cls.custom == 0
+            cls.custom == 0,
+            cls.app == app_name,
         ).update({'excludo': True})
         for rule in app.url_map.iter_rules():
             for method in rule.methods:
@@ -35,8 +39,9 @@ class Permissao(ModelBase):
                         method=method,
                         rule=rule.rule,
                         custom=False,
+                        app=app_name,
                     )
-                    permissao.add(db)
+                    permissao.add()
                 else:
                     permissao.update(excludo=False, rule=rule.rule)
 

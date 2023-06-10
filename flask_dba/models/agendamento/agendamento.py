@@ -16,9 +16,18 @@ class Agendamento(ModelBase):
     credencial_uuid = Column(
         String(36),
         ForeignKey("Credencial.uuid"),
-        nullable=False
+        nullable=True
     )
     credencial = declared_attr(
         lambda cls: relationship(
             'Credencial', backref='Agendamento',
         ))
+
+    def insert(self, dia, hora, minuto):
+        self.dia = dia
+        self.hora = hora
+        self.minuto = minuto
+
+    def insert_credencial(self, credencial):
+        self.credencial = credencial
+        self.credencial_uuid = credencial.uuid

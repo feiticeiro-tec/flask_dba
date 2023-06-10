@@ -20,7 +20,7 @@ class Grupo(ModelBase):
         ).first()
         if not grupo:
             grupo = cls(nome=nome, custom=False)
-            grupo.add(db)
+            grupo.add()
         return grupo
 
     @staticmethod
@@ -30,5 +30,5 @@ class Grupo(ModelBase):
         )
         for raw in raws:
             grupo = cls(nome=raw[0], custom=False)
-            grupo.add(db)
+            grupo.add()
         db.session.commit()

@@ -6,19 +6,24 @@ from ..utils import uuid_default
 
 class ModelMetodosBase():
     """Model base para todos os modelos."""
+    _instancia = {
+        'app': None,
+        'db': None,
+        'dba': None,
+    }
 
-    def add(self, db):
+    def add(self):
         """Adiciona o obj ao banco de dados."""
-        db.session.add(self)
-        self.flush(db)
+        self._instancia['db'].session.add(self)
+        self.flush()
 
-    def save(self, db):
+    def save(self):
         """Faz Commit no banco de dados."""
-        db.session.commit()
+        self._instancia['db'].session.commit()
 
-    def flush(self, db):
+    def flush(self):
         """Atualiza as informações do banco de dados."""
-        db.session.flush()
+        self._instancia['db'].session.flush()
 
 
 class ModelBase(ModelMetodosBase):
