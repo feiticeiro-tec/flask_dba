@@ -17,7 +17,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='flask-dba',
-    version='1.0.0',
+    version='1.1.0',
     url='https://github.com/feiticeiro-tec/flask_dba',
     license='BSD3',
     author='Silvio Henrique Cruz Da Silva',
